@@ -8,7 +8,8 @@ public class SevenDArmCOntroller : MonoBehaviour
 
     public Slider baseSlider; // MultiArm_06
     public Transform robotBase;
-    public float baseTurnRate = 0.10f;
+    public GameObject robotBaseGO;
+    public float baseTurnRate = 10.0f;
     public float baseZRotMin = -90.0f;
     public float baseZRotMax = 90.0f;
     public float baseSliderValue = 0.0f;
@@ -21,6 +22,7 @@ public class SevenDArmCOntroller : MonoBehaviour
     public float shoulderXRotMax = 90.0f;
     public float shoulderSliderValue = 0.0f;
     private float shoulderXRotate = 0.0f;
+    public InputField shoulderInputField;
 
 
     public Slider upperArmSlider;
@@ -80,10 +82,25 @@ public class SevenDArmCOntroller : MonoBehaviour
     private float rightPincherXRotate = 0.0f;
 
 
+    private void moveShoulderJoint(string angle)
+    {
+        int angleInt = int.Parse(angle);
+        baseZRotate = angleInt * baseTurnRate;
+        baseZRotate = Mathf.Clamp(baseZRotate, baseZRotMin, baseZRotMax);
+        LeanTween.rotateLocal(robotBaseGO, new Vector3(robotBase.localEulerAngles.x,
+                                                    robotBase.localEulerAngles.y,
+                                                    baseZRotate),1); // (robotBaseGO, robotBase.rotation.y + baseZRotate, 2).setEaseInOutExpo();
+        //robotBase.localEulerAngles = new Vector3(robotBase.localEulerAngles.x,
+        //                                            robotBase.localEulerAngles.y,
+        //                                            baseZRotate);
+    }
+
     void Start()
     {
         baseSlider.minValue = -1;
         baseSlider.maxValue = 1;
+        shoulderInputField.text = "0.0";
+        shoulderInputField.onEndEdit.AddListener(moveShoulderJoint);
 
         shoulderSlider.minValue = -1;
         shoulderSlider.maxValue = 1;
@@ -126,11 +143,13 @@ public class SevenDArmCOntroller : MonoBehaviour
 
     void ProcessMovement()
     {
-        baseZRotate += baseSliderValue * baseTurnRate;
-        baseZRotate = Mathf.Clamp(baseZRotate, baseZRotMin, baseZRotMax);
-        robotBase.localEulerAngles = new Vector3(robotBase.localEulerAngles.x,
-                                                 robotBase.localEulerAngles.y,
-                                                 baseZRotate);
+        //baseZRotate += baseSliderValue * baseTurnRate;
+        //baseZRotate = Mathf.Clamp(baseZRotate, baseZRotMin, baseZRotMax);
+        //robotBase.localEulerAngles = new Vector3(robotBase.localEulerAngles.x,
+        //                                         robotBase.localEulerAngles.y,
+        //                                         baseZRotate);
+        //if (!shoulderInputField.isFocused)
+        //    shoulderInputField.text = ""+baseZRotate;
 
         shoulderXRotate += shoulderSliderValue * shoulderTurnRate;
         shoulderXRotate = Mathf.Clamp(shoulderXRotate, shoulderXRotMin, shoulderXRotMax);
