@@ -9,10 +9,32 @@ public class SelectionHandler : MonoBehaviour
 
     private GameObject selectedObject;
 
-    // Start is called before the first frame update
-    void Start()
+    string convertJoinNameToControllerName(string jointName)
     {
-        
+        if ("Shoulder Joint".Equals(jointName)) return "SF_Control";
+        if ("BaseShoulder".Equals(jointName)) return "BS_Control";
+        if ("UpperArm".Equals(jointName)) return "UA_Control";
+        if ("Elbow".Equals(jointName)) return "EB_Control";
+        if ("Wrist".Equals(jointName)) return "WR_Control";
+        if ("Hand".Equals(jointName)) return "HA_Control";
+        if ("PincherBase".Equals(jointName)) return "PB_Control";
+        if ("LeftPincher".Equals(jointName)) return "LP_Control";
+        if ("RightPincher".Equals(jointName)) return "RP_Control";
+        return "Unknown";
+    }
+
+    void hideControl(GameObject gameObject)
+    {
+        string goName = gameObject.name;
+        string controllerName = convertJoinNameToControllerName(goName);
+        GameObject.Find(controllerName).GetComponent<MeshRenderer>().enabled = false;
+    }
+
+    void showControl(GameObject gameObject)
+    {
+        string goName = gameObject.name;
+        string controllerName = convertJoinNameToControllerName(goName);
+        GameObject.Find(controllerName).GetComponent<MeshRenderer>().enabled = true;
     }
 
     // Update is called once per frame
@@ -24,46 +46,20 @@ public class SelectionHandler : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
             {
-                // only repaint previous selection if there was one selected already
+                // There was already a selected object
                 if (SelectionManager.instance.selectedObject != null)
                 {
-                    print("SelectionManager: [Prev] selectedObject not null");
-                    Renderer[] rs = SelectionManager.instance.selectedObject.GetComponentsInChildren<Renderer>();
-                    //foreach (Renderer r in rs)
-                    //{
-                    //Material material = rs[0].material;
-                    //material.color = SelectionManager.instance.previouslySelectedObjectMaterial.color;
-                    //rs[0].material = material;
-                    rs[0].material.CopyPropertiesFromMaterial(SelectionManager.instance.previouslySelectedObjectMaterial);
-
-                    print("SelectionManager: mat set for previous");
-                    //}
-                    // If there was a previously selected object, then save its material in the prev slot
-                    Renderer[] prs = selectedObject.GetComponentsInChildren<Renderer>();
-                    SelectionManager.instance.previouslySelectedObjectMaterial.CopyPropertiesFromMaterial(prs[0].material);
+                    hideControl(SelectionManager.instance.selectedObject);
                 }
                 else
                 {
                     print("Prev selectedObject was null");
                 }
 
-                // the object identified by hit.transform was clicked                
-
                 // new selected object
-                selectedObject = hit.transform.gameObject;
-                SelectionManager.instance.selectedObject = selectedObject;
-                print("Hit: "+selectedObject.name);
-                Renderer[] renderers = selectedObject.GetComponentsInChildren<Renderer>();
-                //foreach(Renderer r in renderers)
-                //{
-                //Material m = renderers[0].material;
-                //SelectionManager.instance.previouslySelectedObjectMaterial.color = m.color;
-                //m.color = selectionMaterial.color;
-                //renderers[0].material = m;
-                renderers[0].material.CopyPropertiesFromMaterial(selectionMaterial);
-                //}
+                SelectionManager.instance.selectedObject = hit.transform.gameObject;
+                showControl(SelectionManager.instance.selectedObject);
             }
         }
     }
-    
 }

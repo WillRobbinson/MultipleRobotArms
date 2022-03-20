@@ -7,7 +7,7 @@ public class SelectionManager : MonoBehaviour
     public static SelectionManager instance = null;
     // props
     public GameObject selectedObject = null;
-    public Material previouslySelectedObjectMaterial = null;
+    public float wheelValueG = -9999;
 
     void Awake()
     {
@@ -20,6 +20,22 @@ public class SelectionManager : MonoBehaviour
         {
             print("Awake Destroy");
             Destroy(gameObject);
+        }
+    }
+    private void Update()
+    {
+        float wheelValue = Input.GetAxis("Mouse ScrollWheel");
+        if (wheelValue != wheelValueG)
+        {
+            wheelValueG = wheelValue;
+            if (wheelValue > 0f) // forward
+            {
+                print("Forward: " + wheelValue);
+            }
+            else
+            {
+                print("Backward: " + wheelValue);
+            }
         }
     }
 
