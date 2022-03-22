@@ -81,6 +81,10 @@ public class SevenDArmCOntroller : MonoBehaviour
     public float rightPincherSliderValue = 0.0f;
     private float rightPincherXRotate = 0.0f;
 
+    public void Rotate(GameObject sameObject, int increment)
+    {
+
+    }
 
     private void moveShoulderJoint(string angle)
     {

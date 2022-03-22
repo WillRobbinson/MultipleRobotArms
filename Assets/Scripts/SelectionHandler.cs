@@ -27,14 +27,20 @@ public class SelectionHandler : MonoBehaviour
     {
         string goName = gameObject.name;
         string controllerName = convertJoinNameToControllerName(goName);
-        GameObject.Find(controllerName).GetComponent<MeshRenderer>().enabled = false;
+        if (!"Unknown".Equals(controllerName))
+        {
+            GameObject.Find(controllerName).GetComponent<MeshRenderer>().enabled = false;
+        }
     }
 
     void showControl(GameObject gameObject)
     {
         string goName = gameObject.name;
         string controllerName = convertJoinNameToControllerName(goName);
-        GameObject.Find(controllerName).GetComponent<MeshRenderer>().enabled = true;
+        if (!"Unknown".Equals(controllerName))
+        {
+            GameObject.Find(controllerName).GetComponent<MeshRenderer>().enabled = true;
+        }
     }
 
     // Update is called once per frame

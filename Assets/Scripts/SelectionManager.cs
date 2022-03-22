@@ -8,6 +8,7 @@ public class SelectionManager : MonoBehaviour
     // props
     public GameObject selectedObject = null;
     public float wheelValueG = -9999;
+    public JointRotator jointRotator;
 
     void Awake()
     {
@@ -24,19 +25,40 @@ public class SelectionManager : MonoBehaviour
     }
     private void Update()
     {
+        if (selectedObject == null) return;
+
         float wheelValue = Input.GetAxis("Mouse ScrollWheel");
-        if (wheelValue != wheelValueG)
+        
+
+        if (wheelValue == 0) return;
+        
+        float wheelValueX = Input.mouseScrollDelta.x;
+        float wheelValueY = Input.mouseScrollDelta.y;
+        print("wheelValue["+wheelValue+"] wheelValueX[ " + wheelValueX + " ] wheelValueY[" + wheelValueY + "]");
+
+        wheelValueG = wheelValueY;
+        if (wheelValueY > 0f) // forward
         {
-            wheelValueG = wheelValue;
-            if (wheelValue > 0f) // forward
-            {
-                print("Forward: " + wheelValue);
-            }
-            else
-            {
-                print("Backward: " + wheelValue);
-            }
+            print("Forward: " + wheelValueY);
+            jointRotator.RotateJoint(selectedObject, 10);
+        }
+        else if (wheelValueY < 0f)
+        {
+            print("Backward: " + wheelValueY);
+            jointRotator.RotateJoint(selectedObject, -10);
         }
     }
+
+    /* Every time you change the model in blender:
+     * [ ] 1. save fbx under new number.
+     * [ ] 2. delete old model from unity.
+     * [ ] 3. drag in new, scale, position.
+     * [ ] 4. make gear materials transparent.
+     * [ ] 5. hide all gear mesh renderers.
+     * [ ] 6. add convexed, triggered, mesh colliders to each joint.
+     * [ ] 7. 
+     * [ ] 8. 
+     * [ ] 9. 
+     */
 
 }
